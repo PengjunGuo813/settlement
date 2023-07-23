@@ -1,0 +1,24 @@
+<!-- feedback.hbs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Feedback</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+  </head>
+  <body>
+    {{> header user}}
+    <h1>Feedback Page</h1>
+    <p>Welcome, {{user.username}}! Leave your feedback here:</p>
+    <form action="/submit-feedback" method="post">
+      <textarea name="feedback" rows="4" cols="50"></textarea>
+      <br>
+      <input type="submit" value="Submit Feedback">
+    </form>
+    {{> footer user}}
+  </body>
+</html>
+<a href="/searchrecommendation">Back to Main Page</a>
+
+
+
+

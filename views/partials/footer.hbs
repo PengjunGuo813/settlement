@@ -1,0 +1,14 @@
+<footer id="footer">
+    <div>
+        <p>&copy; Copyright 2023, Four Guys, CAP805 Demo Site {{ username }}</p>
+        <a href="/">Home</a>
+        <a href="/contact">Contact Us</a>
+        {{#if username }}
+            <a href="/logout">Logout</a>
+            <a href="/myaccount">My Account</a>
+            <a href="/dashboard">Dashboard</a>
+        {{else}}
+            <a href="/login">Login</a>
+        {{/if}}
+    </div>
+</footer>

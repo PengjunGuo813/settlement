@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--
+CAP805 S2023 Login Page View
+Four Guys
+June 7, 2023
+    -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2023 Cap805 Login Page</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+    <!-- Header -->
+    {{> header user}}
+    <h1>Login Page</h1>
+
+    {{#if errorMsg }}
+        <h5>{{errorMsg}}</h5>
+    {{else}}
+        <h4>Please Login:</h4>
+    {{/if}}
+
+    <form method="post" action="/login">
+        <table class="form-table">
+            <tr>
+                <td><label class="fixedLabel"><h4>Email</h4></label></td>
+                <td><input type="text" name="email"></td>
+            </tr>
+            <tr>
+                <td><label class="fixedLabel"><h4>Password</h4></label></td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td><label class="fixedLabel"></label></td>
+                <td>
+                    <div class="button-links">
+                        <button type="submit" class="login-button">Login</button>
+                        <a href="/registration" class="button-link">Registration</a>
+                        <a href="/forgotpassword" class="button-link">Forgot Password?</a>
+                        <a href="/searchrecommendation" class="button-link">Visitor</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <!-- Footer -->
+    {{> footer user}}
+</body>
+</html>

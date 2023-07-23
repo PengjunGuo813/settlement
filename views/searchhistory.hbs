@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+CAP805 S2023 Homepage View
+Four Guys
+June 7, 2023
+    -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2023 Cap805 Search History Page</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+</head>
+
+<body>
+    <!-- Header -->
+    {{> header user}}
+    <h1>Your Search Result</h1>
+    <table class="search-history-table">
+        <tr>
+            <th>City Name</th>
+            <th>Province Name</th>
+            <th>Tax Rate</th>
+            <th>Average Salary(CA$/year)</th>
+            <th>Crime Rate Total</th>
+            <th>Crime Rate Violent</th>
+            <th>Crime Rate Non-Violent</th>
+            <th>Population</th>
+            <th>Cost Of Living Index</th>
+            <th>Rent Index</th>
+            <th>Groceries Index</th>
+        </tr>
+        {{#each currentResults}}
+        <tr>
+            <td>{{this.cityName}}</td>
+            <td>{{this.province.provinceName}}</td>
+            <td>{{this.province.taxRate}}</td>
+            <td>{{this.province.salaryAverage}}</td>
+            <td>{{this.crimeRateTotal}}</td>
+            <td>{{this.crimeRateViolent}}</td>
+            <td>{{this.crimeRateNonViolent}}</td>
+            <td>{{this.population}}</td>
+            <td>{{this.costOfLivingIndex}}</td>
+            <td>{{this.rentIndex}}</td>
+            <td>{{this.groceriesIndex}}</td>
+        </tr>
+        {{/each}}
+    </table>
+    {{#if user}}
+        <h2>Here is your search history</h2>
+        {{#each pastSearchResults}}
+        <table class="search-history-table">
+            <tr>
+                <th>City Name</th>
+                <th>Province Name</th>
+                <th>Tax Rate</th>
+                <th>Average Salary(CA$/year)</th>
+                <th>Crime Rate Total</th>
+                <th>Crime Rate Violent</th>
+                <th>Crime Rate Non-Violent</th>
+                <th>Population</th>
+                <th>Cost Of Living Index</th>
+                <th>Rent Index</th>
+                <th>Groceries Index</th>
+            </tr>
+            {{#each this.results}}
+            <tr>
+                <td>{{this.cityName}}</td>
+                <td>{{this.province.provinceName}}</td>
+                <td>{{this.province.taxRate}}</td>
+                <td>{{this.province.salaryAverage}}</td>
+                <td>{{this.crimeRateTotal}}</td>
+                <td>{{this.crimeRateViolent}}</td>
+                <td>{{this.crimeRateNonViolent}}</td>
+                <td>{{this.population}}</td>
+                <td>{{this.costOfLivingIndex}}</td>
+                <td>{{this.rentIndex}}</td>
+                <td>{{this.groceriesIndex}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        {{/each}}
+    {{else}} 
+        <h2>We will keep your search history if you register an account!</h2>
+    {{/if}}
+    <!-- Footer -->
+    {{> footer user}}
+</body>
+
+
+</html>

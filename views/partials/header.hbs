@@ -1,0 +1,43 @@
+<header id="header">
+    <div class="header-left">
+        <h1>Four Guys</h1>
+    </div>
+    <div class="header-right">
+        <a href="/attractions">Attraction</a>
+        <a href="/education">Education</a>
+        <a href="/searchrecommendation">Search Recommendation</a>
+        <div class="headerDropdown">
+            <button class="headerDropbtn">Newcomer</button>
+            <div class="headerDropdown-content">
+                <a href="/banking">Banking</a>
+                <a href="/housing">Housing</a>
+                <a href="/mobile">Mobile</a>
+                <a href="/crimerate">Crime Rate</a>
+            </div>
+        </div>
+        <div class="headerDropdown">
+            <button class="headerDropbtn">Trasportation</button>
+            <div class="headerDropdown-content">
+                <a href="/driverlicense">Driver License</a>
+                <a href="/rentacar">Rent A Car</a>
+                <a href="/ownacar">Own A Car</a>
+            </div>
+        </div>
+        {{#if username }}
+            {{#if isAdmin}}
+                Welcome admin user: <em>{{ username }}</em>!
+                <a href="/myaccount">My Account</a>
+                <a href="/adminDashboard">Admin Dashboard</a>
+                <a href="/logout">Logout</a>
+            {{else}}
+                Welcome: <em>{{ username }}</em>! 
+                <a href="/myaccount">My Account</a>
+                <a href="/logout">Logout</a>
+            {{/if}}
+        {{else}}
+            <a href="/login">Login</a>
+            <a href="/registration">Registration</a>
+        {{/if}}
+        <a href="feedback">Feedback</a>
+    </div>
+</header>

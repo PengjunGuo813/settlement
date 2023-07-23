@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--
+CAP805 S2023 Login Page View
+Four Guys
+June 7, 2023
+    -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2023 Cap805 Search Recommendation Page</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('select').on('change', function() {
+            var selectedValues = [];
+            $('select option:selected').each(function() {
+                selectedValues.push($(this).val());
+            });
+            $('select option').each(function() {
+                if ($(this).val() != '' && $.inArray($(this).val(), selectedValues) > -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    });
+    </script>
+    {{!-- the script to make sure the user can't select the same element twice --}}
+</head>
+<body>
+    <!-- Header -->
+    {{> header user}}
+    <h1>Search Recommendation</h1>
+    {{#if user}}
+        <p>Hello <em>{{ user.username }}</em></p>
+        <form method="post" action="/searchrecommendation">
+            <label for="province">Province: </label>
+            <select id="province" name="province" required>
+                <option value="1">Alberta</option>
+                <option value="2">British Columbia</option>
+                <option value="3">Manitoba</option>
+                <option value="4">New Brunswick</option>
+                <option value="5">Newfoundland and Labrador</option>
+                <option value="6">Nova Scotia</option>
+                <option value="7">Ontario</option>
+                <option value="8">Prince Edward Island</option>
+                <option value="9">Quebec</option>
+                <option value="10">Saskatchewan</option>
+                <option value="11">Yukon</option>
+            </select><br>
+            <label for="firstPref">First preference:</label>
+            <select id="firstPref" name="firstPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="secondPref">Second preference:</label>
+            <select id="secondPref" name="secondPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="thirdPref">Third preference:</label>
+            <select id="thirdPref" name="thirdPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="fourthPref">Fourth preference:</label>
+            <select id="fourthPref" name="fourthPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="fifthPref">Fifth preference:</label>
+            <select id="fifthPref" name="fifthPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="sixthPref">Sixth preference:</label>
+            <select id="sixthPref" name="sixthPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="seventhPref">Seventh preference:</label>
+            <select id="seventhPref" name="seventhPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <button type="submit">Submit Preferences</button>
+        </form>
+    {{else}} 
+        <p>Hello Visitor!</p>
+        <form method="post" action="/searchrecommendation">
+            <label for="province">Province: </label>
+            <select id="province" name="province" required>
+                <option value="1">Alberta</option>
+                <option value="2">British Columbia</option>
+                <option value="3">Manitoba</option>
+                <option value="4">New Brunswick</option>
+                <option value="5">Newfoundland and Labrador</option>
+                <option value="6">Nova Scotia</option>
+                <option value="7">Ontario</option>
+                <option value="8">Prince Edward Island</option>
+                <option value="9">Quebec</option>
+                <option value="10">Saskatchewan</option>
+                <option value="11">Yukon</option>
+            </select><br>
+            <label for="firstPref">First preference:</label>
+            <select id="firstPref" name="firstPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="secondPref">Second preference:</label>
+            <select id="secondPref" name="secondPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <label for="thirdPref">Third preference:</label>
+            <select id="thirdPref" name="thirdPref">
+                <option value="" selected>-</option>
+                <option value="taxRate">Tax Rate</option>
+                <option value="salaryAverage">Salary Average (yr)</option>
+                <option value="crimeRate">Crime Rate</option>
+                <option value="population">Population</option>
+                <option value="costOfLiving">Cost of Living</option>
+                <option value="rent">Rent</option>
+                <option value="groceries">Groceries</option>
+            </select><br>
+            <button type="submit">Submit Preferences</button>
+        </form>
+    {{/if}}
+    <!-- Footer -->
+    {{> footer user}}
+</body>
+
+</html>

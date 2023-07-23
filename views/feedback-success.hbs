@@ -1,0 +1,15 @@
+<!-- feedback-success.hbs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Feedback Submitted</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+  </head>
+  <body>
+    {{> header user}}
+    <h1>Feedback Submitted</h1>
+    <p>Thank you for your feedback, {{user.username}}!</p>
+    {{> footer user}}
+  </body>
+</html>
+<a href="/searchrecommendation">Back to Main Page</a>

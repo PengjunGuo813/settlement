@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Account</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+    <script>
+        // Password regex pattern
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[%._!])[A-Za-z\d%._!]{8,}$/;
+
+        function validatePassword() {
+            const passwordInput = document.getElementById("new-password").value;
+            const isValid = passwordRegex.test(passwordInput);
+            const passwordError = document.getElementById("password-error");
+
+            if (!isValid) {
+                passwordError.textContent = "Password must contain at least one lowercase letter, one uppercase letter, one special character (%._!), and be at least 8 characters long.";
+            } else {
+                passwordError.textContent = "";
+            }
+        }
+    </script>
+</head>
+<body>
+    {{> header user}}
+    <h1>Welcome to My Account</h1>
+    <p>Username: {{user.username}}</p>
+    <p>Email: {{user.email}}</p>
+
+    <!-- Form for Change Password -->
+    <form action="/changepassword" method="post">
+        <label for="new-password">New Password:</label>
+        <input type="password" id="new-password" name="newPassword" oninput="validatePassword()" required><br>
+        <span id="password-error" style="color: red;"></span><br>
+
+        <label for="confirm-password">Confirm New Password:</label>
+        <input type="password" id="confirm-password" name="confirmPassword" required><br>
+
+        <button type="submit">Change Password</button>
+    </form>
+
+    {{> footer user}}
+    
+    <!-- Back to Main Page Link -->
+    <a href="/searchrecommendation">Back to Main Page</a>
+</body>
+</html>
+

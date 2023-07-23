@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2023 Cap805 Crime Rate Page</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+    <style>
+      select {
+        width: 200px; /* Adjust the width as needed */
+      }
+      .population-section {
+        width: 35%; /* Adjust the width as needed */
+        display: inline-block;
+      }
+      .about-crime-section {
+        width: 45%; /* Adjust the width as needed */
+        display: inline-block;
+        vertical-align: top;
+      }
+    </style>
+</head>
+
+<body>
+  <!-- Header -->
+  {{> header user}}
+  <div class="population-section">
+    <h1>Crime Rate</h1>
+    <label for="province">Select Province:</label>
+    <select id="province" name="province">
+      {{#each provinces}}
+      <option value="{{this.provinceId}}">{{this.provinceName}}</option>
+      {{/each}}
+    </select>
+
+    <label for="city">Select City:</label>
+    <select id="city" name="city">
+      <!-- Add an empty default option -->
+      <option value="">Select City</option>
+    </select>
+
+
+    <h2>{{selectedCity.cityName}} {{selectedProvince.provinceName}}</h2>
+    <style>
+        select {
+            width: 150px; /* Adjust the width as needed */
+        }
+    </style>
+
+    <p class="left-align" >Population: <span id="population"></span></p>
+    <p class="left-align" >Crime Rate (Violent): <span id="crimeRateViolent"></span></p>
+    <p class="left-align" >Crime Rate (Non-Violent): <span id="crimeRateNonViolent"></span></p>
+    <p class="left-align">Crime Rate (Total): <span id="crimeRateTotal"></span></p>
+
+   
+    <script>
+      // Get references to the province and city dropdowns
+      const provinceDropdown = document.getElementById('province');
+      const cityDropdown = document.getElementById('city');
+      // Function to populate the city dropdown based on the selected province
+      function populateCityDropdown() {
+        // Clear the city dropdown options
+        cityDropdown.innerHTML = '<option value="">Select City</option>';
+        // Get the selected province ID
+        const selectedProvinceId = provinceDropdown.value;
+        // Filter the sampleData based on the selected province
+        const filteredCities = {{json sampleData}}
+          .filter(city => city.provinceId === parseInt(selectedProvinceId));
+        // Add the filtered cities as options to the city dropdown
+        filteredCities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city.cityId;
+          option.textContent = city.cityName;
+          cityDropdown.appendChild(option);
+        });
+      }
+
+      // Function to update the displayed city information based on the selected city
+      function updateCityInfo() {
+        const selectedCityId = cityDropdown.value;
+        const selectedCity = {{json sampleData}}
+          .find(city => city.cityId === parseInt(selectedCityId));
+        if (selectedCity) {
+          document.getElementById('population').textContent = selectedCity.population;
+          document.getElementById('crimeRateViolent').textContent = selectedCity.crimeRateViolent;
+          document.getElementById('crimeRateNonViolent').textContent = selectedCity.crimeRateNonViolent;
+          document.getElementById('crimeRateTotal').textContent = selectedCity.crimeRateTotal;
+        } else {
+          // If no city is selected, clear the displayed values
+          document.getElementById('population').textContent = "";
+          document.getElementById('crimeRateViolent').textContent = "";
+          document.getElementById('crimeRateNonViolent').textContent = "";
+         document.getElementById('crimeRateTotal').textContent = "";
+        }
+      }
+
+      // Event listeners for the province and city dropdown change events
+      provinceDropdown.addEventListener('change', populateCityDropdown);
+      cityDropdown.addEventListener('change', updateCityInfo);
+
+      // Initial population of the city dropdown
+      populateCityDropdown();
+    </script>
+  </div>
+  <div class="about-crime-section">
+    <style>
+      .first-letter-large::first-letter {
+        font-size: 1.5em; /* Adjust the font size as desired */
+        font-weight: bold; /* Optional: Add font weight if desired */
+      }
+    </style>
+    <h2>About Crime Rate in Canada</h2>
+    <p class="first-letter-large" style="text-align:start;">Crime in Canada is generally considered low overall. Under the Canadian constitution, the power to establish criminal 
+        law and rules of investigation is vested in the federal Parliament. The provinces share responsibility for law 
+        enforcement (although provincial policing in many jurisdictions is contracted to the federal Royal Canadian Mounted 
+        Police), and while the power to prosecute criminal offences is assigned to the federal government, responsibility for 
+        prosecutions is delegated to the provinces for most types of criminal offences. Laws and sentencing guidelines are 
+        uniform throughout the country, but provinces vary in their level of enforcement.
+    </p>
+
+    <p class="first-letter-large" style="text-align:start;">According to the latest report of Statistics Canada, overall crime in Canada has been steadily declining since the late 
+        1990s as measured by the Crime Severity Index (CSI) and the Violent Crime Severity Index (VCSI), with a more recent 
+        uptick since an all-time low in 2014. Both measures of crime saw an 8 to 10 percent decrease between 2010 and 2018. 
+        Violent crime, specifically homicide, has declined in Canada by over 40% since its peak in 1975, placing Canada 79th 
+        in the world by homicide rate—far worse than Australia, England, and Ireland, comparable to or slightly worse than 
+        Belgium, and relatively close to poorer European countries. It is tied for first in the Americas with Chile (homicide 
+        rates are 2.7 times lower than in the United States). Current crimes that are increasing include drug-related offences, 
+        fraud, sexual assault and theft, with fraud increasing 46% between 2008 and 2018.
+    </p>
+  </div>
+  <!-- Footer -->
+  {{> footer user}}
+</body>
+
+</html>

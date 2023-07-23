@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link type="text/css" rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+    <!-- Header -->
+    {{> header user}}
+    <h1>Admin Dashboard</h1>
+    <p>Hello <em>{{ user.username }}</em></p>
+    <p>Email: {{ user.email }}</p>
+    
+    <!-- User List -->
+   <h2>User List</h2>
+<ul>
+    {{#each users}}
+    <li>{{this.username}} - {{this.email}} <button class="delete-user" data-id="{{this._id}}">Delete</button></li>
+    {{/each}}
+</ul>
+
+<!-- Add User Form -->
+<h2>Add User</h2>
+<form id="addUserForm">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Add User</button>
+</form>
+
+<script src="/js/admin.js"></script>
+    {{> footer user}}
+</body>
+</html>
