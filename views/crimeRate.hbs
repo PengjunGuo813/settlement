@@ -28,82 +28,85 @@
   {{> header user}}
   <div class="population-section">
     <h1>Crime Rate</h1>
-    <label for="province">Select Province:</label>
-    <select id="province" name="province">
-      {{#each provinces}}
-      <option value="{{this.provinceId}}">{{this.provinceName}}</option>
-      {{/each}}
-    </select>
-
-    <label for="city">Select City:</label>
-    <select id="city" name="city">
-      <!-- Add an empty default option -->
-      <option value="">Select City</option>
-    </select>
-
-
-    <h2>{{selectedCity.cityName}} {{selectedProvince.provinceName}}</h2>
-    <style>
-        select {
-            width: 150px; /* Adjust the width as needed */
-        }
-    </style>
-
-    <p class="left-align" >Population: <span id="population"></span></p>
-    <p class="left-align" >Crime Rate (Violent): <span id="crimeRateViolent"></span></p>
-    <p class="left-align" >Crime Rate (Non-Violent): <span id="crimeRateNonViolent"></span></p>
-    <p class="left-align">Crime Rate (Total): <span id="crimeRateTotal"></span></p>
-
-   
-    <script>
-      // Get references to the province and city dropdowns
-      const provinceDropdown = document.getElementById('province');
-      const cityDropdown = document.getElementById('city');
-      // Function to populate the city dropdown based on the selected province
-      function populateCityDropdown() {
-        // Clear the city dropdown options
-        cityDropdown.innerHTML = '<option value="">Select City</option>';
-        // Get the selected province ID
-        const selectedProvinceId = provinceDropdown.value;
-        // Filter the sampleData based on the selected province
-        const filteredCities = {{json sampleData}}
-          .filter(city => city.provinceId === parseInt(selectedProvinceId));
-        // Add the filtered cities as options to the city dropdown
-        filteredCities.forEach(city => {
+   <!-- Province Dropdown -->
+   <label for="province">Select Province:</label>
+   <select name="province" id="province">
+    <option value="">Select a province</option>
+    {{#each provinces}}
+    <option value="{{this.provinceId}}" {{#ifEquals ../selectedProvince.provinceId this.provinceId}}selected{{/ifEquals}}>{{this.provinceName}}</option>
+    {{/each}}
+  </select>
+  
+  <!-- City Dropdown -->
+  <label for="city">Select City:</label>
+  <select name="city" id="city">
+    <option value="">Select a city</option>
+    {{#each selectedProvinceCities}}
+    <option value="{{this.cityId}}">{{this.cityName}}</option>
+    {{/each}}
+  </select>
+    <!-- Placeholder for displaying population and crime rates -->
+  <p>Population: <span id="population"></span></p>
+  <p>Violent Crime Rate: <span id="crimeRateViolent"></span></p>
+  <p>Non-Violent Crime Rate: <span id="crimeRateNonViolent"></span></p>
+  <p>Total Crime Rate: <span id="crimeRateTotal"></span></p>
+  <script>
+ 
+  // Function to fetch city data based on the selected province
+  function fetchCities() {
+    const selectedProvinceId = document.getElementById('province').value;
+    fetch(`/api/cities?provinceId=${selectedProvinceId}`)
+      .then(response => response.json())
+      .then(data => {
+        const cityDropdown = document.getElementById('city');
+        cityDropdown.innerHTML = '<option value="">Select a city</option>';
+        data.forEach(city => {
           const option = document.createElement('option');
           option.value = city.cityId;
           option.textContent = city.cityName;
           cityDropdown.appendChild(option);
         });
-      }
+      })
+      .catch(error => {
+        console.error('Error fetching city data:', error);
+      });
+  }
 
-      // Function to update the displayed city information based on the selected city
-      function updateCityInfo() {
-        const selectedCityId = cityDropdown.value;
-        const selectedCity = {{json sampleData}}
-          .find(city => city.cityId === parseInt(selectedCityId));
-        if (selectedCity) {
-          document.getElementById('population').textContent = selectedCity.population;
-          document.getElementById('crimeRateViolent').textContent = selectedCity.crimeRateViolent;
-          document.getElementById('crimeRateNonViolent').textContent = selectedCity.crimeRateNonViolent;
-          document.getElementById('crimeRateTotal').textContent = selectedCity.crimeRateTotal;
-        } else {
-          // If no city is selected, clear the displayed values
-          document.getElementById('population').textContent = "";
-          document.getElementById('crimeRateViolent').textContent = "";
-          document.getElementById('crimeRateNonViolent').textContent = "";
-         document.getElementById('crimeRateTotal').textContent = "";
-        }
-      }
+  // Function to fetch population and crime rates based on the selected city
+  function fetchPopulationAndCrimeRates(selectedCityId) {
+    fetch(`/api/city?cityId=${selectedCityId}`)
+      .then(response => response.json())
+      .then(data => {
+        // Update the population
+        document.getElementById('population').textContent = data.population;
 
-      // Event listeners for the province and city dropdown change events
-      provinceDropdown.addEventListener('change', populateCityDropdown);
-      cityDropdown.addEventListener('change', updateCityInfo);
+        // Update the crime rates
+        document.getElementById('crimeRateViolent').textContent = data.crimeRateViolent;
+        document.getElementById('crimeRateNonViolent').textContent = data.crimeRateNonViolent;
+        document.getElementById('crimeRateTotal').textContent = data.crimeRateTotal;
+      })
+      .catch(error => {
+        console.error('Error fetching population and crime rates:', error);
+      });
+  }
 
-      // Initial population of the city dropdown
-      populateCityDropdown();
-    </script>
-  </div>
+  // Event listener for the city dropdown change event
+  document.getElementById('city').addEventListener('change', function() {
+    const selectedCityId = document.getElementById('city').value;
+    fetchPopulationAndCrimeRates(selectedCityId);
+  });
+
+  // Event listener for the province dropdown change event
+  document.getElementById('province').addEventListener('change', fetchCities);
+
+  // Populate city dropdown if a province is already selected
+  if ("{{selectedProvince.provinceId}}") {
+    fetchCities();
+    const selectedCityId = document.getElementById('city').value;
+    fetchPopulationAndCrimeRates(selectedCityId);
+  }
+</script>
+</div>
   <div class="about-crime-section">
     <style>
       .first-letter-large::first-letter {

@@ -513,71 +513,109 @@ app.get("/housing", (req, res) => {
 app.get("/mobile", (req, res) => {
     res.render("mobile",{ user: req.Cap805Session.user,layout: false}) 
 }); 
-app.get("/crimeRate", (req, res) => {
-    var sampleData= [{
-        provinceId: 1,
-        provinceName: "Ontario",
-        cityId: 1,
-        cityName: "Toronto",
-        population: 100000,
-        crimeRateViolent: 22,
-        crimeRateNonViolent: 27,
-        crimeRateTotal: 49
-    },
-    {
-        provinceId: 1,
-        provinceName: "Ontario",
-        cityId: 2,
-        cityName: "Ottawa",
-        population: 70000,
-        crimeRateViolent: 15,
-        crimeRateNonViolent: 22,
-        crimeRateTotal: 37
-    },
-    {
-        provinceId: 2,
-        provinceName: "British Columbia",
-        cityId: 3,
-        cityName: "Vancouver",
-        population: 90000,
-        crimeRateViolent: 10,
-        crimeRateNonViolent: 20,
-        crimeRateTotal: 30
-    },
-    {
-        provinceId: 3,
-        provinceName: "Quebec",
-        cityId: 4,
-        cityName: "Montreal",
-        population: 60000,
-        crimeRateViolent: 13,
-        crimeRateNonViolent: 19,
-        crimeRateTotal: 32
-    }];
 
-    var provinces = [
-        { provinceId: 1, provinceName: "Ontario" },
-        { provinceId: 2, provinceName: "British Columbia" },
-        { provinceId: 3, provinceName: "Quebec" }
-    ];
-
-    // Fetch the selected province and city from the request parameters
-    const selectedProvinceId = parseInt(req.query.province);
-    const selectedCityId = parseInt(req.query.city);
-
-    // Find the selected province and city from the sampleData
-    const selectedProvince = sampleData.find(province => province.provinceId === selectedProvinceId);
-    const selectedCity = sampleData.find(city => city.cityId === selectedCityId);
-
-    res.render('crimeRate', {
-        user: req.Cap805Session.user,
-        layout: false,
-        sampleData: sampleData,
-        provinces: provinces,
-        selectedProvince: selectedProvince,
-        selectedCity: selectedCity
-    });
+// Define a custom helper for "ifEquals"
+handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
+  
+app.get("/crimeRate", async (req, res) => {
+    try {
+        const provinces = await ProvinceModel.find({}, { _id: 0, provinceId: 1, provinceName: 1 });
+
+        let selectedProvince = null;
+        let selectedCity = null;
+
+        // Fetch the selected province and city from the request parameters
+        const selectedProvinceId = parseInt(req.query.province);
+        const selectedCityId = parseInt(req.query.city);
+
+        // Find the selected province and city from the database
+        if (selectedProvinceId) {
+            selectedProvince = await ProvinceModel.findOne({ provinceId: selectedProvinceId }, { _id: 0, __v: 0 });
+
+            // Fetch cities for the selected province
+            const cities = await CityModel.find({ provinceId: selectedProvinceId }, { _id: 0, cityId: 1, cityName: 1, provinceId: 1 });
+
+            if (selectedCityId) {
+                // Find the selected city from the cities fetched for the selected province
+                selectedCity = cities.find(city => city.cityId === selectedCityId);
+            }
+
+            res.render('crimeRate', {
+                user: req.Cap805Session.user,
+                layout: false,
+                provinces: provinces,
+                cities: cities,
+                selectedProvince: selectedProvince,
+                selectedCity: selectedCity,
+                sampleData: cities, // Pass cities data to the template as sampleData
+            });
+        } else {
+            // If no province is selected, render the view with provinces only
+            res.render('crimeRate', {
+                user: req.Cap805Session.user,
+                layout: false,
+                provinces: provinces,
+                cities: [],
+                selectedProvince: selectedProvince,
+                selectedCity: null,
+                sampleData: [], // Pass an empty array as sampleData
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching crime rate data:", error);
+        res.render('crimeRate', {
+            user: req.Cap805Session.user,
+            layout: false,
+            provinces: [],
+            cities: [],
+            selectedProvince: null,
+            selectedCity: null,
+            sampleData: [], // Pass an empty array as sampleData
+        });
+    }
+});
+
+// API route to fetch cities based on the selected province
+app.get("/api/cities", (req, res) => {
+    const selectedProvinceId = parseInt(req.query.provinceId);
+  
+    if (isNaN(selectedProvinceId)) {
+      res.status(400).json({ error: "Invalid provinceId parameter" });
+      return;
+    }
+  
+    CityModel.find({ provinceId: selectedProvinceId })
+      .then(cities => {
+        res.json(cities);
+      })
+      .catch(error => {
+        console.error("Error fetching city data:", error);
+        res.status(500).json({ error: "Failed to fetch city data" });
+      });
+});
+
+// API route to fetch crime rate information for a selected city
+app.get("/api/city", (req, res) => {
+    const selectedCityId = parseInt(req.query.cityId);
+  
+    if (isNaN(selectedCityId)) {
+      res.status(400).json({ error: "Invalid cityId parameter" });
+      return;
+    }
+  
+    CityModel.findOne({ cityId: selectedCityId })
+      .then(city => {
+        res.json(city);
+      })
+      .catch(error => {
+        console.error("Error fetching crime rate data:", error);
+        res.status(500).json({ error: "Failed to fetch crime rate data" });
+      });
+});
+
+  
 
 //Forgot Password:
 app.post('/forgotpassword', (req, res) => {
@@ -635,4 +673,4 @@ module.exports = {
     app,
     ensureLogin,
     ensureAdmin
-  }
+}
